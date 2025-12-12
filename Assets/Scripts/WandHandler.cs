@@ -16,11 +16,14 @@ public class WandHandler : MonoBehaviour
     public float maxSamples = 300;              // safety cap
     Vector3 lastSamplePos;
 
+    public GestureQuickRecorder gestureRecorder;
+
+    public GameObject trianlge, cirlce, square;
     void Start()
     {
         _stylusHandler = this.GetComponent<StylusHandler>();
     }
-    Vector3 GetTipPosition()
+    public Vector3 GetTipPosition()
     {
         return trailRenderer.transform.position;
     }
@@ -65,17 +68,55 @@ public class WandHandler : MonoBehaviour
                 isSwirling = false;
                 trailRenderer.enabled = false;
 
-                //SEND STROKE FOR RECOGNITION LATER
-                Debug.Log($"Stroke finished. Points collected = {strokePoints.Count}");
-
-                /*
-                var result = ShapeRecognizer.Analyze(strokePoints);
-                Debug.Log($"Shape: {result.Shape}, cw: {result.Clockwise}, revs: {result.Revolutions}, corners: {result.Corners}, conf: {result.Confidence}");
-                if (result.Shape == ShapeRecognizer.ShapeType.Circle) Debug.Log("Circle");
-                else if (result.Shape == ShapeRecognizer.ShapeType.Triangle) Debug.Log("Triangle");*/
+                //SEND STROKE FOR RECOGNITION
+                RecognizeStroke();
             }
         }
     }
+
+    void RecognizeStroke()
+    {
+        if (gestureRecorder == null || gestureRecorder.recognizer == null)
+        {
+            Debug.LogWarning("Gesture recognizer not assigned.");
+            return;
+        }
+
+        if (strokePoints == null || strokePoints.Count < 6)
+        {
+            Debug.Log("Stroke too short to recognize.");
+            return;
+        }
+
+        var result = gestureRecorder.recognizer.Recognize(strokePoints);
+
+        Debug.Log(
+            $"GESTURE RESULT == {result.label} | score={result.score:F2} | margin={result.margin:F2}"
+        );
+
+        // TEMP: simple routing
+        switch (result.label)
+        {
+            case "circle_cw":
+                cirlce.SetActive(true);
+                Debug.Log("circle clock wise ACCIO");
+                break;
+
+            case "triangle":
+                trianlge.SetActive(true);
+                Debug.Log("triangle ALOHOMORA");
+                break;
+            case "square":
+                square.SetActive(true);
+                Debug.Log("Square aaaaa");
+                break;
+            case "Unknown":
+                Debug.Log("Unknown gesture");
+                break;
+        }
+    }
+
+
     private void TriggerHaptics()
     {
         const float dampingFactor = 0.6f;
