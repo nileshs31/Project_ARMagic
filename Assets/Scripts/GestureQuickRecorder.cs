@@ -104,25 +104,43 @@ public class GestureQuickRecorder : MonoBehaviour
 
     public void SaveTemplatesToFile(string filename = null)
     {
+#if UNITY_EDITOR
         string name = string.IsNullOrEmpty(filename) ? templatesFileName : filename;
-        string path = Path.Combine(Application.persistentDataPath, name);
+
+        string dir = Path.Combine(Application.dataPath, "StreamingAssets");
+        if (!Directory.Exists(dir))
+            Directory.CreateDirectory(dir);
+
+        string path = Path.Combine(dir, name);
+
         recognizer.SaveTemplates(path);
-        Debug.Log("GestureQuickRecorder: Templates saved to " + path);
+        Debug.Log("Saved DEFAULT gesture templates to StreamingAssets: " + path);
+
+        UnityEditor.AssetDatabase.Refresh();
+#else
+    Debug.LogWarning("Saving gesture templates is disabled in builds.");
+#endif
     }
+
 
     public void LoadTemplatesFromFile(string filename = null)
     {
         string name = string.IsNullOrEmpty(filename) ? templatesFileName : filename;
-        string path = Path.Combine(Application.persistentDataPath, name);
-        recognizer.LoadTemplates(path);
-        Debug.Log("GestureQuickRecorder: Templates loaded from " + path);
+        string path = Path.Combine(Application.streamingAssetsPath, name);
 
-
-        foreach (var names in recognizer.GetTemplateNames())
+        if (!File.Exists(path))
         {
-            Debug.Log($"Loaded gesture label: {names}");
+            Debug.LogWarning("Gesture template file not found in StreamingAssets.");
+            return;
         }
+
+        recognizer.LoadTemplates(path);
+        Debug.Log("Loaded gesture templates from StreamingAssets: " + path);
+
+        foreach (var label in recognizer.GetTemplateNames())
+            Debug.Log($"Loaded gesture label: {label}");
     }
+
 
     // -------------------------
     // Utility (optional)

@@ -18,7 +18,7 @@ public class WandHandler : MonoBehaviour
 
     public GestureQuickRecorder gestureRecorder;
 
-    public GameObject trianlge, cirlce, square;
+    public GameObject trianlge, cirlce, circleacw, square, swipedown, swipeup, squigle, spiral;
     void Start()
     {
         _stylusHandler = this.GetComponent<StylusHandler>();
@@ -106,9 +106,29 @@ public class WandHandler : MonoBehaviour
                 trianlge.SetActive(true);
                 Debug.Log("triangle ALOHOMORA");
                 break;
+            case "circle_ccw":
+                circleacw.SetActive(true);
+                Debug.Log("Anti Clockwise Circle aaaaa");
+                break;
+            case "spiral":
+                spiral.SetActive(true);
+                Debug.Log("Spiral bbbbb");
+                break;
+            case "squiggle":
+                squigle.SetActive(true);
+                Debug.Log("Squiggle ccccccc");
+                break;
+            case "swipe_down":
+                swipedown.SetActive(true);
+                Debug.Log("Swipe_down dddddddd");
+                break;
+            case "swipe_up":
+                swipeup.SetActive(true);
+                Debug.Log("swipe_up eeeeee");
+                break;
             case "square":
                 square.SetActive(true);
-                Debug.Log("Square aaaaa");
+                Debug.Log("Square fffffff");
                 break;
             case "Unknown":
                 Debug.Log("Unknown gesture");
