@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [Serializable]
 public class DtwTemplate
@@ -110,13 +111,29 @@ public class DtwKnnRecognizer
         templates = w.templates != null ? new List<DtwTemplate>(w.templates) : new List<DtwTemplate>();
         Debug.Log($"DtwKnnRecognizer: Loaded {templates.Count} templates from {path}");
     }
+    public void LoadTemplatesFromJson(string json)
+    {
+        if (string.IsNullOrEmpty(json))
+        {
+            Debug.LogWarning("LoadTemplatesFromJson: JSON is empty.");
+            templates = new List<DtwTemplate>();
+            return;
+        }
+
+        var w = JsonUtility.FromJson<Wrapper>(json);
+        templates = w.templates != null
+            ? new List<DtwTemplate>(w.templates)
+            : new List<DtwTemplate>();
+
+        Debug.Log($"DtwKnnRecognizer: Loaded {templates.Count} templates from JSON");
+    }
 
     [Serializable]
     class Wrapper { public DtwTemplate[] templates; }
 
     // Remove all templates
     public void ClearTemplates() => templates.Clear();
-
+    
     // Get template names (for UI)
     public List<string> GetTemplateNames() => templates.Select(t => t.name).Distinct().ToList();
 

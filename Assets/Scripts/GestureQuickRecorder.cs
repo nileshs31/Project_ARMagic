@@ -1,6 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
+using UnityEngine;
 
 /// <summary>
 /// Runtime gesture recorder with label-lock mode.
@@ -42,7 +43,7 @@ public class GestureQuickRecorder : MonoBehaviour
         if (_stylusHandler == null)
             Debug.LogWarning("GestureQuickRecorder: VrStylusHandler not assigned.");
 
-        LoadTemplatesFromFile();
+        LoadTemplatesFromStreamingAssets();
 
     }
 
@@ -151,4 +152,49 @@ public class GestureQuickRecorder : MonoBehaviour
         activeLabel = null;
         status = "Recording stopped.";
     }
+
+
+    void LoadTemplatesFromStreamingAssets()
+    {
+        StartCoroutine(LoadTemplatesCoroutine());
+    }
+
+    IEnumerator LoadTemplatesCoroutine()
+    {
+        string fileName = templatesFileName;
+        string path = Path.Combine(Application.streamingAssetsPath, fileName);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+    using (UnityEngine.Networking.UnityWebRequest www =
+           UnityEngine.Networking.UnityWebRequest.Get(path))
+    {
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityEngine.Networking.UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("Failed to load gesture templates: " + www.error);
+            yield break;
+        }
+
+        string json = www.downloadHandler.text;
+        recognizer.LoadTemplatesFromJson(json);
+        Debug.Log("Loaded gesture templates from StreamingAssets (Android)");
+    }
+#else
+        // Editor / PC
+        if (!File.Exists(path))
+        {
+            Debug.LogError("Gesture template file not found: " + path);
+            yield break;
+        }
+
+        string json = File.ReadAllText(path);
+        recognizer.LoadTemplatesFromJson(json);
+        Debug.Log("Loaded gesture templates from StreamingAssets (Editor/PC)");
+#endif
+
+        foreach (var name in recognizer.GetTemplateNames())
+            Debug.Log("Loaded gesture label: " + name);
+    }
+
 }

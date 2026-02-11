@@ -99,12 +99,12 @@ public class WandHandler : MonoBehaviour
         {
             case "circle_cw":
                 cirlce.SetActive(true);
-                Debug.Log("circle clock wise ACCIO");
+                Debug.Log("circle clock wise");
                 break;
 
             case "triangle":
                 trianlge.SetActive(true);
-                Debug.Log("triangle ALOHOMORA");
+                Debug.Log("triangle");
                 break;
             case "circle_ccw":
                 circleacw.SetActive(true);
