@@ -24,9 +24,11 @@ public class WandHandler : MonoBehaviour
 
     public GestureQuickRecorder gestureRecorder;
 
-    public GameObject triangle, circle, circle_ccw, square, swipedown, swipeup, squiggle, spiral;
+    public GameObject triangle, circle, circle_ccw, square, swipedown, swipeup, squiggle, spiral, bolt;
 
     public WandTargeting targeting;
+
+    bool _backButtonLastFrame = false;  // edge detection for stylus back button (bolt)
     void Start()
     {
         SwitchToController();
@@ -98,13 +100,40 @@ public class WandHandler : MonoBehaviour
         {
             if (isSwirling)
             {
-                isSwirling = false; 
+                isSwirling = false;
                 trailRenderer.enabled = false;
                 OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.RTouch);
                 hapticTimer = 0f;
                 RecognizeStroke();
             }
         }
+
+        // ── Fire bolt: single tap, separate from gesture drawing ─────────────
+        // Stylus : back button (cluster_back)
+        // Controller : A button (Button.One) — index trigger is already used for
+        //              gesture drawing so we map bolt to the face button instead.
+        //              Change OVRInput.Button.One to .Two (B) if you prefer.
+        CheckBoltInput();
+    }
+
+    void CheckBoltInput()
+    {
+        bool boltPressed = false;
+
+        if (useStylus)
+        {
+            bool backNow = _stylusHandler.CurrentState.cluster_back_value;
+            boltPressed           = backNow && !_backButtonLastFrame; // rising edge only
+            _backButtonLastFrame  = backNow;
+        }
+        else
+        {
+            // GetDown fires only on the frame the button is first pressed
+            boltPressed = OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch);
+        }
+
+        if (boltPressed)
+            FireBolt();
     }
     void SwitchToStylus()
     {
@@ -214,17 +243,40 @@ public class WandHandler : MonoBehaviour
                 Debug.Log("Unknown gesture");
                 break;
         }
+        // Capture target and remove highlight BEFORE firing the spell event.
+        // This ensures spell effects (e.g. freeze material swap) always land on
+        // the object's clean original materials, not on the fresnel highlight.
+        var target = targeting.GetLockedTarget();
+        targeting.UnlockTarget();
+
         if (isRecognized)
         {
             TriggerSuccessHaptics();
-            var target = targeting.GetLockedTarget();
             SpellEvents.OnSpellCast?.Invoke(result.label, target);
         }
-
-
-        targeting.UnlockTarget();
     }
 
+
+    void FireBolt()
+    {
+        if (SpellManager.Instance == null) return;
+
+        // For fire bolt there is no gesture swirl, so lockedTarget is never set.
+        // Fall back to currentTarget — whatever is currently in the targeting cone.
+        var target = targeting.GetLockedTarget() ?? targeting.currentTarget;
+        targeting.UnlockTarget();
+
+        bool fired = SpellManager.Instance.TryFireBolt(
+            GetTipPosition(),
+            trailRenderer.transform.rotation,
+            target);
+
+        if (fired)
+        {
+            if (bolt != null) bolt.SetActive(true);
+            TriggerSuccessHaptics();
+        }
+    }
 
     private void TriggerHaptics(float input)
     {

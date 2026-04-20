@@ -53,10 +53,7 @@ public class GestureQuickRecorder : MonoBehaviour
         if (string.IsNullOrEmpty(activeLabel)) return;
         if (_stylusHandler == null || wandHandler == null) return;
 
-        float input = Mathf.Max(
-            _stylusHandler.CurrentState.cluster_middle_value,
-            _stylusHandler.CurrentState.tip_value
-        );
+        float input = _stylusHandler.CurrentState.cluster_middle_value;
 
         bool isPressed = input > 0f;
 
@@ -85,12 +82,26 @@ public class GestureQuickRecorder : MonoBehaviour
             return;
         }
 
-        if (wandHandler.strokePoints == null || wandHandler.strokePoints.Count < 6)
+        if (wandHandler.strokePoints == null || wandHandler.strokePoints.Count < 12)
         {
             status = "Stroke too short. Try again.";
             return;
         }
 
+        float totalDist = 0f;
+        for (int i = 1; i < wandHandler.strokePoints.Count; i++)
+        {
+            totalDist += Vector3.Distance(
+                wandHandler.strokePoints[i - 1],
+                wandHandler.strokePoints[i]
+            );
+        }
+
+        if (totalDist < 0.05f) // tweak (5cm)
+        {
+            status = "Stroke too small.";
+            return;
+        }
         // Add template
         recognizer.AddTemplate(activeLabel, new List<Vector3>(wandHandler.strokePoints));
         status = $"Saved '{activeLabel}' (pts={wandHandler.strokePoints.Count})";
