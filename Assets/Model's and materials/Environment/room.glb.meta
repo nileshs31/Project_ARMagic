@@ -1,0 +1,161 @@
+fileFormatVersion: 2
+guid: b8c78a99659c38549ac6d3577028834d
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_8
+    second: {fileID: 2100000, guid: ec9b427f5b3f96340879115f75ea8b2a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_2
+    second: {fileID: 2100000, guid: f22f3bf33425d534f988ac50b7522a6c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_brick_mat
+    second: {fileID: 2100000, guid: 7e5deab9654b9e14c80973648ea7b96b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_bulbglows_mat
+    second: {fileID: 2100000, guid: cf8f0384ce1783b49858e9c84bfb7b49, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_godrays_mat
+    second: {fileID: 2100000, guid: 8e3cc72069ed831488f945e4865e0685, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_tapestries_mat
+    second: {fileID: 2100000, guid: 0264920f9201cdd45bab81be9fd72605, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_windows
+    second: {fileID: 2100000, guid: 4492a13a6b6cfb54c9368870be93598b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_woodplanks_mat
+    second: {fileID: 2100000, guid: 6ddcac93363a2574b9bdc06d5cd32435, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_woodplanks_mat_0
+    second: {fileID: 2100000, guid: f2b014ab647f97540883fb0b8579d0cc, type: 2}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 804e1ce4c496647cfa3f1a1134187c71, type: 3}
+  _removeEmptyRootObjects: 1
+  _scaleFactor: 1
+  _deduplicateResources: 0
+  _deduplicatedStatistics:
+    meshCountBefore: 0
+    meshCountAfter: 0
+    textureCountBefore: 0
+    textureCountAfter: 0
+  _maximumLod: 300
+  _readWriteEnabled: 1
+  _generateColliders: 0
+  _addColliders: 0
+  _swapUvs: 0
+  _generateLightmapUVs: 0
+  _importBlendShapeNames: 1
+  _blendShapeFrameWeight:
+    _option: 0
+    _multiplier: 1
+  _importNormals: 0
+  _importTangents: 0
+  _importCamera: 2
+  _importAnimations: 2
+  _mecanimHumanoidFlip: 0
+  _addAnimatorComponent: 0
+  _animationLoopTime: 1
+  _animationLoopPose: 0
+  _importMaterials: 1
+  _enableGpuInstancing: 0
+  _texturesReadWriteEnabled: 1
+  _generateMipMaps: 1
+  _useSceneNameIdentifier: 1
+  _textureCompression: -50
+  _gltfAsset: '<b>Generator: </b>Khronos glTF Blender I/O v4.5.49
+
+    <b>Version:
+    </b>2.0
+
+    
+
+    <b>Extras: </b>
+
+'
+  optimizeGameObjects: 0
+  materials:
+  - {fileID: -4004348558189065582, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: 8404115952637471651, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: -6909403778196084258, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: -8350857538101993826, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: 4537474117107360283, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: 3840819185036838990, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: -7393051377623377202, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: -9063941185552341045, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: 1013163042919959056, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  textures:
+  - {fileID: 7876530471615878255, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: -1730833855850997377, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: -8845356094729755552, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: -9139065326579632839, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: 2725816526373312921, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: -4201689541765347603, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  - {fileID: -3926687174140238800, guid: b8c78a99659c38549ac6d3577028834d, type: 3}
+  hasSceneData: 1
+  hasAnimationData: 0
+  hasMaterialData: 1
+  hasTextureData: 1
+  animations: []
+  _extensions:
+  - name: KHR_materials_emissive_strength
+    supported: 1
+    used: 1
+    required: 0
+  _textures:
+  - texture: {fileID: 7876530471615878255, guid: b8c78a99659c38549ac6d3577028834d,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -1730833855850997377, guid: b8c78a99659c38549ac6d3577028834d,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -8845356094729755552, guid: b8c78a99659c38549ac6d3577028834d,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -9139065326579632839, guid: b8c78a99659c38549ac6d3577028834d,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 2725816526373312921, guid: b8c78a99659c38549ac6d3577028834d,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -4201689541765347603, guid: b8c78a99659c38549ac6d3577028834d,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -8845356094729755552, guid: b8c78a99659c38549ac6d3577028834d,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -3926687174140238800, guid: b8c78a99659c38549ac6d3577028834d,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  _mainAssetIdentifier: scenes/Scene
+  _importPlugins: []

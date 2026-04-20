@@ -1,0 +1,492 @@
+fileFormatVersion: 2
+guid: 4369ad68cc135e34f970dffc0fa5777f
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DefaultMaterial
+    second: {fileID: 2100000, guid: c0167d387ecd9a84b875dc2a1ec787d4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DefaultMaterial.001
+    second: {fileID: 2100000, guid: 9b538cd99d1977a4bb268ca01d5e9140, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Low_Poly_Small
+    second: {fileID: 2100000, guid: 92b48366b5c8a2c4fa9d45d6ebe7f844, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Low_Poly_Wood
+    second: {fileID: 2100000, guid: 9c1f84e00e147b045a381dee5bc3a028, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.016
+    second: {fileID: 2100000, guid: 31e49d7992b48a144a6ae4b5246c262c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_0
+    second: {fileID: 2100000, guid: 72d4e8e5af918d94594d05cdc754b11a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_10
+    second: {fileID: 2100000, guid: d663f10885c56124ca5d0a940aad4986, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_11
+    second: {fileID: 2100000, guid: c49369fb479d6a84db20d2dde87327c6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_12
+    second: {fileID: 2100000, guid: da65f0dca02fefd40b39bc8f93f86cfd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_15
+    second: {fileID: 2100000, guid: 74035613494acbb41aba1a6fbe555847, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_16
+    second: {fileID: 2100000, guid: e022ae6463de5814ea56807da2a7c424, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_17
+    second: {fileID: 2100000, guid: 2e93a625e14f79747ba863552eecb6cf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_2
+    second: {fileID: 2100000, guid: ccab0875e546e9b4aaafd82096307aea, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_3
+    second: {fileID: 2100000, guid: 467dd0a48662a47439d70988303faa0c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_4
+    second: {fileID: 2100000, guid: 9a19539b9dc7c42468478e4bd36a352c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_6
+    second: {fileID: 2100000, guid: 83356133bc65fa64eab887cc4bc15857, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_7
+    second: {fileID: 2100000, guid: edd59272719facd4f9ebdd0f20dfee5e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_11_9
+    second: {fileID: 2100000, guid: 6efeb611c8388dc4d9f93617f5cda194, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_22
+    second: {fileID: 2100000, guid: 63158a9423ef0bf459cd8c8dc50f5cd8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_29
+    second: {fileID: 2100000, guid: 4b6dbfdc84595a74495d5abe4a31ebdf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_32
+    second: {fileID: 2100000, guid: 79c8603e5c7042c4d9db29f93247f1b1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_33
+    second: {fileID: 2100000, guid: 3b62c0d40b7eac14ea0103c43ec02cce, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_5
+    second: {fileID: 2100000, guid: cba186c3472438f4ea40dc2b3e103434, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_5_0
+    second: {fileID: 2100000, guid: bdfca9dcade98a24b8687c04e2139173, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_5_1
+    second: {fileID: 2100000, guid: 031fffc8853126e489c87f67a3d99c3c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_5_11
+    second: {fileID: 2100000, guid: 368ffdf6a1b44bf48b6045eba52af386, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_5_12
+    second: {fileID: 2100000, guid: be3b960f3270e474fb9f68a22466f4d2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_5_13
+    second: {fileID: 2100000, guid: b0688a73acdb1e54588bddc3fde8df60, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_5_14
+    second: {fileID: 2100000, guid: b5f7974da5f1cb346863bbc6d29c7379, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_5_3
+    second: {fileID: 2100000, guid: 0d2342fbb61b5974e8cd7e9c20f8a6d9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_5_4
+    second: {fileID: 2100000, guid: ff66ddac778081448a165df93c8a12a2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_5_5
+    second: {fileID: 2100000, guid: 15796637e1815e64b9449096fbdcea79, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_5_8
+    second: {fileID: 2100000, guid: c3cc7b63e17f7ee4d81c4f09e4ffc8e1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_atlas_02_unlit_mat_5_9
+    second: {fileID: 2100000, guid: fe3539dcfe01fcb48901383596bd0bd5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_fake_lighting_mat
+    second: {fileID: 2100000, guid: 8aa5c416d3d135a4db4252c41ffc4b3c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pk_gryffindorcommonroom_fireembers_mat
+    second: {fileID: 2100000, guid: be8c8017e0c683f46a5bca8ca0a0c256, type: 2}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 804e1ce4c496647cfa3f1a1134187c71, type: 3}
+  _removeEmptyRootObjects: 1
+  _scaleFactor: 1
+  _deduplicateResources: 0
+  _deduplicatedStatistics:
+    meshCountBefore: 0
+    meshCountAfter: 0
+    textureCountBefore: 21
+    textureCountAfter: 20
+  _maximumLod: 300
+  _readWriteEnabled: 1
+  _generateColliders: 0
+  _addColliders: 0
+  _swapUvs: 0
+  _generateLightmapUVs: 0
+  _importBlendShapeNames: 1
+  _blendShapeFrameWeight:
+    _option: 0
+    _multiplier: 1
+  _importNormals: 0
+  _importTangents: 0
+  _importCamera: 2
+  _importAnimations: 2
+  _mecanimHumanoidFlip: 0
+  _addAnimatorComponent: 0
+  _animationLoopTime: 1
+  _animationLoopPose: 0
+  _importMaterials: 1
+  _enableGpuInstancing: 0
+  _texturesReadWriteEnabled: 1
+  _generateMipMaps: 1
+  _useSceneNameIdentifier: 1
+  _textureCompression: -50
+  _gltfAsset: '<b>Generator: </b>Khronos glTF Blender I/O v4.5.49
+
+    <b>Version:
+    </b>2.0
+
+    
+
+    <b>Extras: </b>
+
+'
+  optimizeGameObjects: 0
+  materials:
+  - {fileID: 3176283576161616625, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 6817704211366708136, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -6161831383363815211, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 915736848986762728, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 4291125925748286455, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -7047038465977196906, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 4217562466572702356, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -7076351695825115337, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 6087720466731432498, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 5700150300488983301, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 7877728448386422994, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 5711051293696200624, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -1385637538264281420, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 1123052875709335644, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 5863650252929523565, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 637949407474519127, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 3693533449297030917, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 8852439949949117051, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -3597903473522175763, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 6824287105902898145, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 6136316393333008598, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -4191025807004095126, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -886507041920517311, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -8472854697866774940, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 2732081665939740889, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -1665501543042968426, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -5631447282264683691, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 7469778168306774907, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -2433638272817550614, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 2237031903825823191, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 2854214948975770694, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -3807456713887801301, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 5264565493437500504, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -7113920904623056096, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -7129477564731325565, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 8533198814523178489, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  textures:
+  - {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -6896483190002025107, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 8354645282395905400, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -8501800169562467773, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -2863712584209404253, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 3312051794683344342, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -8492185572676876961, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 2892405794376244130, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 3103538762600520160, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -1730833855850997377, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -7046796069495104128, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 5817316546618748719, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -2269827306019751141, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -1141872293355561129, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: 8356977545115736127, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -5635462105673884329, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -270869600809711574, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -4367015613395570246, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  - {fileID: -6594107604222763438, guid: 4369ad68cc135e34f970dffc0fa5777f, type: 3}
+  hasSceneData: 1
+  hasAnimationData: 0
+  hasMaterialData: 1
+  hasTextureData: 1
+  animations: []
+  _extensions:
+  - name: KHR_materials_specular
+    supported: 1
+    used: 1
+    required: 0
+  - name: KHR_texture_transform
+    supported: 1
+    used: 1
+    required: 1
+  _textures:
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -6896483190002025107, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 8354645282395905400, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -8501800169562467773, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 1
+    shouldBeNormalMap: 1
+  - texture: {fileID: -2863712584209404253, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3312051794683344342, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 1
+    shouldBeNormalMap: 0
+  - texture: {fileID: 8354645282395905400, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -8492185572676876961, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 1
+    shouldBeNormalMap: 1
+  - texture: {fileID: 2892405794376244130, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3103538762600520160, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 1
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -1730833855850997377, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 1
+    shouldBeNormalMap: 1
+  - texture: {fileID: -7046796069495104128, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 5817316546618748719, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 1
+    shouldBeNormalMap: 1
+  - texture: {fileID: -2269827306019751141, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -1141872293355561129, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 1
+    shouldBeNormalMap: 1
+  - texture: {fileID: 8356977545115736127, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -5635462105673884329, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 1
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -270869600809711574, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -4367015613395570246, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: -6594107604222763438, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 3070409480593088962, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  - texture: {fileID: 7876530471615878255, guid: 4369ad68cc135e34f970dffc0fa5777f,
+      type: 3}
+    shouldBeLinear: 0
+    shouldBeNormalMap: 0
+  _mainAssetIdentifier: scenes/Scene
+  _importPlugins: []

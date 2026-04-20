@@ -14,7 +14,11 @@ public class VrStylusHandler : StylusHandler
 
     public Color active_color = Color.green;
     public Color double_tap_active_color = Color.cyan;
-    public Color default_color = Color.white;
+    public Color default_color = Color.white; 
+    
+    [SerializeField] private MeshRenderer wandMeshRenderer;
+
+    bool _frontButtonLastFrame = false;
 
     // Defined action names.
     private const string MX_Ink_Pose_Right = "aim_right";
@@ -29,7 +33,7 @@ public class VrStylusHandler : StylusHandler
     private const string MX_Ink_Haptic_Pulse = "haptic_pulse";
     private float _hapticClickDuration = 0.011f;
     private float _hapticClickAmplitude = 1.0f;
-
+    public bool isStylusActive;
     private void UpdatePose()
     {
         var leftDevice = OVRPlugin.GetCurrentInteractionProfileName(OVRPlugin.Hand.HandLeft);
@@ -42,6 +46,7 @@ public class VrStylusHandler : StylusHandler
         string MX_Ink_Pose = _stylus.isOnRightHand ? MX_Ink_Pose_Right : MX_Ink_Pose_Left;
 
         _mxInk_model.SetActive(_stylus.isActive);
+        isStylusActive = _stylus.isActive;
         _right_touch_controller.SetActive(!_stylus.isOnRightHand || !_stylus.isActive);
         _left_touch_controller.SetActive(_stylus.isOnRightHand || !_stylus.isActive);
 
@@ -78,6 +83,20 @@ public class VrStylusHandler : StylusHandler
             Debug.LogError($"MX_Ink: Error getting action name: {MX_Ink_ClusterFront}");
         }
 
+        bool frontPressed = _stylus.cluster_front_value;
+
+        if (frontPressed && !_frontButtonLastFrame)
+        {
+            if (wandMeshRenderer != null)
+            {
+                wandMeshRenderer.enabled = !wandMeshRenderer.enabled;
+            }
+            // OR if using GameObject:
+            // if (wandVisual != null) wandVisual.SetActive(!wandVisual.activeSelf);
+        }
+
+        _frontButtonLastFrame = frontPressed;
+
         if (!OVRPlugin.GetActionStateBoolean(MX_Ink_ClusterBack, out _stylus.cluster_back_value))
         {
             Debug.LogError($"MX_Ink: Error getting action name: {MX_Ink_ClusterBack}");
@@ -113,10 +132,10 @@ public class VrStylusHandler : StylusHandler
         {
             _cluster_back.GetComponent<MeshRenderer>().material.color = _stylus.cluster_back_double_tap_value ? double_tap_active_color : default_color;
         }
-        if (_stylus.cluster_back_double_tap_value)
+        /*if (_stylus.cluster_back_double_tap_value)
         {
             TriggerHapticClick();
-        }
+        }*/
     }
 
     public void TriggerHapticPulse(float amplitude, float duration)

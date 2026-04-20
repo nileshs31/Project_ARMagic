@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\" worktree list)",
+      "Bash(git -C \"D:/Nilesh/GameDev/Project_ARMagic\" branch -a)",
+      "WebFetch(domain:devpost.com)"
+    ]
+  }
+}
