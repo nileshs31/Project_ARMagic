@@ -1,8 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using InionVR.AI;
 
+/// <summary>
+/// Thin wrapper around VoiceBot (OpenAI Whisper + assistant).
+///
+/// The assistant is instructed to return ONLY one of the exact spell labels
+/// (circle_cw, circle_ccw, swipe_up, triangle, square, swipe_down,
+///  squiggle, spiral) or "Unknown".  No mapping is needed here — the result
+/// is forwarded as-is via onSpellTranscribed.
+///
+/// UI feedback (listening / loading indicators) is handled by WandHandler.
+/// Button input is handled by WandHandler.
+/// </summary>
 [RequireComponent(typeof(AudioSource))]
 public class VoiceBot_Wrapper : MonoBehaviour
 {
@@ -10,96 +20,51 @@ public class VoiceBot_Wrapper : MonoBehaviour
     [SerializeField] int micNumber;
     VoiceBot bot;
 
-    [Header("Input")]
-    [SerializeField] private OVRInput.Controller controller = OVRInput.Controller.LTouch;
-    private readonly OVRInput.Button holdToTalkButton = OVRInput.Button.One;   // A (left)
-    bool talkingButtonHeld = false;
-    [SerializeField] GameObject listening, loading;
+    // ── Public event ──────────────────────────────────────────────────────────
 
-   // public AfterVoiceButtonsManager afterVoiceButtonsManager;
+    /// Fired with the assistant's exact response string.
+    /// Value is one of the spell labels or "Unknown".
+    /// WandHandler subscribes here.
+    public Action<string> onSpellTranscribed;
+
+    // ─────────────────────────────────────────────────────────────────────────
+
     void Start()
     {
-        // Turn off auto play
         GetComponent<AudioSource>().playOnAwake = false;
 
-        // Initiate the VoiceBot
         bot = new VoiceBot(a, k, micNumber);
 
-        // (Optional) Display all the Mics available
-        foreach(var mic in bot.GetMicrophoneList()) 
+        foreach (var mic in bot.GetMicrophoneList())
             Debug.Log(mic);
 
-        // Subscribe to the Listening Event
-        bot.onListening += () =>
+        bot.onListening  += () => { };
+
+        bot.onThinking   += (result) =>
         {
-            //ignore
+            string spell = result?.Trim();
+            Debug.Log("[VoiceBot] Result: " + spell);
+            onSpellTranscribed?.Invoke(spell);
         };
 
-        // Subscribe to the Thinking Event
-        bot.onThinking += (recordedPrompt) =>
-        {
-            loading.SetActive(false);
-
-            Debug.Log("STT RESULT: " + recordedPrompt);
-
-            //Prompt Result here, call spellmanager
-        };
-
-        // Subscribe to the Speaking Event
-        bot.onSpeaking += (responce) =>
-        {
-            //ignore
-        };
-
-        // Subscribe to the Completion Event
-        bot.onCompleted += (responceClip) =>
-        {
-            ///ignore
-        };
+        bot.onSpeaking   += (response)     => { };
+        bot.onCompleted  += (responseClip) => { };
     }
 
-    private void Update()
-    {
+    // ── Called by WandHandler ─────────────────────────────────────────────────
 
-       // if (ControllerOrHandsUpdater.Instance.UpdateInputSource(controller == OVRInput.Controller.LTouch ? true : false)) return;
+    public void StartVoiceRecording(int maxSeconds = 15) => bot.Record(maxSeconds);
+    public void StopVoiceRecording()                     => bot.StopRecording();
+    /// Cancel any in-flight Whisper request so a fresh recording can start immediately.
+    public void CancelRecording()                        => bot.ForceReset();
 
-        // --- Talking (A) ---
-        if (OVRInput.GetDown(holdToTalkButton, controller))
-        {
-            if (!talkingButtonHeld)
-            {
-                talkingButtonHeld = true;
-                listening.SetActive(true);
-                bot.Record(15);
-            }
-        }
-        if (OVRInput.GetUp(holdToTalkButton, controller))
-        {
-            if (talkingButtonHeld)
-            {
-                talkingButtonHeld = false;
-                listening.SetActive(false);
-                loading.SetActive(true);
-                bot.StopRecording();
-            }
-        }
-    }
+    // ── Lifecycle ─────────────────────────────────────────────────────────────
 
-    public void OnDestroy()
-    {
-        bot.Destroy();
-    }
+    public void OnDestroy() => bot.Destroy();
 
     [ContextMenu("StopRecording")]
-    public void StopRecording()
-    {
-        bot.StopRecording();
-    }
+    public void StopRecording() => bot.StopRecording();
 
-    // Initiate the Cycle
     [ContextMenu("Record")]
-    public void session()
-    {
-        bot.Record(14);
-    }
+    public void session() => bot.Record(14);
 }

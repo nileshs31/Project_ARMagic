@@ -1,4 +1,4 @@
-using UnityEngine; 
+﻿using UnityEngine; 
 using UnityEngine.Rendering;
 using Meta.XR.MRUtilityKit;
 public class PassthroughController : MonoBehaviour
@@ -53,9 +53,21 @@ public class PassthroughController : MonoBehaviour
         }
     }
 
+    public bool IsPassthrough => isPassthrough;
+
+    /// Set passthrough to an explicit state (safe to call even if already in that state).
+    public void SetPassthrough(bool enable)
+    {
+        if (isPassthrough == enable) return;
+        isPassthrough = enable;
+        TogglePassthrough(isPassthrough);
+    }
+
     public void TogglePassthrough()
     {
         isPassthrough = !isPassthrough;
         TogglePassthrough(isPassthrough);
     }
 }
+
+

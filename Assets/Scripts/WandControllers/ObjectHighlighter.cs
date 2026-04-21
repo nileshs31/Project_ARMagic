@@ -3,24 +3,48 @@ using UnityEngine;
 
 public class ObjectHighlighter : MonoBehaviour
 {
-    [SerializeField] List<MeshRenderer> meshesToHighlight;
+    [SerializeField] List<MeshRenderer>        meshesToHighlight;
+    [SerializeField] List<SkinnedMeshRenderer> skinnedMeshesToHighlight;
     [SerializeField] Material outlineMat;
     [SerializeField] Material fresnelMaterial;
 
-    // Store original materials
-    private Dictionary<MeshRenderer, Material[]> originalMats = new Dictionary<MeshRenderer, Material[]>();
+    // Unified renderer list — populated in Awake from whichever list is filled.
+    // Both MeshRenderer and SkinnedMeshRenderer inherit from Renderer,
+    // so .materials works identically on both.
+    private List<Renderer> _renderers = new List<Renderer>();
 
-    // Store generated fresnel materials (so we can clean up if needed)
-    private Dictionary<MeshRenderer, Material[]> fresnelMatsCache = new Dictionary<MeshRenderer, Material[]>();
+    private Dictionary<Renderer, Material[]> originalMats    = new Dictionary<Renderer, Material[]>();
+    private Dictionary<Renderer, Material[]> fresnelMatsCache = new Dictionary<Renderer, Material[]>();
 
     private bool isHighlighted = false;
 
     void Awake()
     {
-        foreach (var mesh in meshesToHighlight)
+        // Prefer MeshRenderer list if populated; fall back to SkinnedMeshRenderer.
+        if (meshesToHighlight != null && meshesToHighlight.Count > 0)
         {
-            originalMats[mesh] = mesh.materials;
+            foreach (var mr in meshesToHighlight)
+                if (mr != null) _renderers.Add(mr);
         }
+        else if (skinnedMeshesToHighlight != null && skinnedMeshesToHighlight.Count > 0)
+        {
+            foreach (var smr in skinnedMeshesToHighlight)
+                if (smr != null) _renderers.Add(smr);
+        }
+        else
+        {
+            // Auto-fill: grab all child renderers of either type
+            foreach (var mr  in GetComponentsInChildren<MeshRenderer>(true))
+                _renderers.Add(mr);
+
+            // Only fall through to skinned if nothing was found above
+            if (_renderers.Count == 0)
+                foreach (var smr in GetComponentsInChildren<SkinnedMeshRenderer>(true))
+                    _renderers.Add(smr);
+        }
+
+        foreach (var r in _renderers)
+            originalMats[r] = r.materials;
     }
 
     public void HighlightMesh(bool highlight)
@@ -28,74 +52,64 @@ public class ObjectHighlighter : MonoBehaviour
         if (highlight == isHighlighted) return;
         isHighlighted = highlight;
 
-        foreach (var mesh in meshesToHighlight)
+        foreach (var r in _renderers)
         {
-            if (highlight)
-                AddHighlight(mesh);
-            else
-                RemoveHighlight(mesh);
+            if (highlight) AddHighlight(r);
+            else           RemoveHighlight(r);
         }
     }
-    void AddHighlight(MeshRenderer mesh)
+
+    void AddHighlight(Renderer r)
     {
-        if (!originalMats.ContainsKey(mesh)) return;
+        if (!originalMats.ContainsKey(r)) return;
 
-        // Always re-capture whatever materials the mesh has RIGHT NOW before
-        // applying the highlight.  This means if the mesh is frozen (ice mats)
-        // when the highlight fires, we record ice mats as the "restore point"
-        // so RemoveHighlight gives back ice — not the Awake-time originals.
-        // Destroy any stale fresnel instances from a previous AddHighlight call
-        // that was not followed by a RemoveHighlight (e.g. RefreshHighlight).
-        if (fresnelMatsCache.ContainsKey(mesh))
+        // Re-capture current materials so freeze/other runtime swaps are respected.
+        // Destroy any stale fresnel instances from a previous AddHighlight.
+        if (fresnelMatsCache.ContainsKey(r))
         {
-            foreach (var mat in fresnelMatsCache[mesh])
+            foreach (var mat in fresnelMatsCache[r])
                 if (mat != null) Destroy(mat);
-            fresnelMatsCache.Remove(mesh);
+            fresnelMatsCache.Remove(r);
         }
-        originalMats[mesh] = mesh.materials;
+        originalMats[r] = r.materials;
 
-        var original = originalMats[mesh];
+        var original = originalMats[r];
 
-        List<Material> newMats = new List<Material>();
-        Material[] fresnelMats = new Material[original.Length];
+        List<Material> newMats    = new List<Material>();
+        Material[]     fresnelMats = new Material[original.Length];
 
         for (int i = 0; i < original.Length; i++)
         {
-            Material origMat = original[i];
+            Material origMat        = original[i];
             Material fresnelInstance = new Material(fresnelMaterial);
 
-            // =========================
-            // TEXTURE COPY (ROBUST)
-            // =========================
-
-            Texture tex = null;
-            Vector2 scale = Vector2.one;
+            // ── Texture copy ─────────────────────────────────────────────────
+            Texture tex    = null;
+            Vector2 scale  = Vector2.one;
             Vector2 offset = Vector2.zero;
 
             string[] textureProps =
             {
-            "_BaseMap",          // URP
-            "baseColorTexture",     // glTF (MOST IMPORTANT)
-            "_MainTex",          // Standard
-            "_BaseColorTexture"  // some glTF importers
-        };
+                "_BaseMap",          // URP
+                "baseColorTexture",  // glTF
+                "_MainTex",          // Standard
+                "_BaseColorTexture"  // some glTF importers
+            };
 
             foreach (var prop in textureProps)
             {
                 if (origMat.HasProperty(prop))
                 {
                     tex = origMat.GetTexture(prop);
-
                     if (tex != null)
                     {
-                        scale = origMat.GetTextureScale(prop);
+                        scale  = origMat.GetTextureScale(prop);
                         offset = origMat.GetTextureOffset(prop);
                         break;
                     }
                 }
             }
 
-            // APPLY TEXTURE TO FRESNEL
             if (tex != null)
             {
                 if (fresnelInstance.HasProperty("_BaseMap"))
@@ -104,7 +118,6 @@ public class ObjectHighlighter : MonoBehaviour
                     fresnelInstance.SetTextureScale("_BaseMap", scale);
                     fresnelInstance.SetTextureOffset("_BaseMap", offset);
                 }
-
                 if (fresnelInstance.HasProperty("_MainTex"))
                 {
                     fresnelInstance.SetTexture("_MainTex", tex);
@@ -113,18 +126,15 @@ public class ObjectHighlighter : MonoBehaviour
                 }
             }
 
-            // =========================
-            // COLOR COPY (ALWAYS)
-            // =========================
-
+            // ── Colour copy ──────────────────────────────────────────────────
             Color col = Color.white;
 
             string[] colorProps =
             {
-            "_BaseColor",        // URP
-            "_Color",            // Standard
-            "baseColorFactor"   // glTF
-        };
+                "_BaseColor",    // URP
+                "_Color",        // Standard
+                "baseColorFactor" // glTF
+            };
 
             foreach (var prop in colorProps)
             {
@@ -135,48 +145,29 @@ public class ObjectHighlighter : MonoBehaviour
                 }
             }
 
-            // APPLY COLOR TO FRESNEL
-            if (fresnelInstance.HasProperty("_BaseColor"))
-                fresnelInstance.SetColor("_BaseColor", col);
+            if (fresnelInstance.HasProperty("_BaseColor")) fresnelInstance.SetColor("_BaseColor", col);
+            if (fresnelInstance.HasProperty("_Color"))     fresnelInstance.SetColor("_Color",     col);
 
-            if (fresnelInstance.HasProperty("_Color"))
-                fresnelInstance.SetColor("_Color", col);
-
-            // =========================
             fresnelMats[i] = fresnelInstance;
             newMats.Add(fresnelInstance);
         }
 
-        // Cache for cleanup
-        fresnelMatsCache[mesh] = fresnelMats;
-
-        // Add outline material at end
+        fresnelMatsCache[r] = fresnelMats;
         newMats.Add(outlineMat);
-
-        mesh.materials = newMats.ToArray();
+        r.materials = newMats.ToArray();
     }
 
-    void Update()
+    void RemoveHighlight(Renderer r)
     {
-        if (!isHighlighted) return;
-    }
+        if (!originalMats.ContainsKey(r)) return;
 
-    void RemoveHighlight(MeshRenderer mesh)
-    {
-        if (!originalMats.ContainsKey(mesh)) return;
+        r.materials = originalMats[r];
 
-        mesh.materials = originalMats[mesh];
-
-        // Cleanup generated fresnel instances
-        if (fresnelMatsCache.ContainsKey(mesh))
+        if (fresnelMatsCache.ContainsKey(r))
         {
-            foreach (var mat in fresnelMatsCache[mesh])
-            {
-                if (mat != null)
-                    Destroy(mat);
-            }
-
-            fresnelMatsCache.Remove(mesh);
+            foreach (var mat in fresnelMatsCache[r])
+                if (mat != null) Destroy(mat);
+            fresnelMatsCache.Remove(r);
         }
     }
 
@@ -187,10 +178,12 @@ public class ObjectHighlighter : MonoBehaviour
     {
         if (!isHighlighted) return;
 
-        foreach (var mesh in meshesToHighlight)
-        {
-            if (mesh != null)
-                AddHighlight(mesh); // AddHighlight now re-caches + cleans up old instances
-        }
+        foreach (var r in _renderers)
+            if (r != null) AddHighlight(r);
+    }
+
+    void Update()
+    {
+        if (!isHighlighted) return;
     }
 }

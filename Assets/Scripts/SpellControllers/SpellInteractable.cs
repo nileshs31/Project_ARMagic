@@ -41,11 +41,24 @@ public class SpellInteractable : MonoBehaviour
 
     // ── Per-object overrides ──────────────────────────────────────────────────
 
-    [Header("Freeze  (auto-filled from children if left empty)")]
-    public List<MeshRenderer> meshesToFreeze = new List<MeshRenderer>();
+    [Header("Freeze (auto-filled from children if both lists are empty)")]
+    public List<MeshRenderer>        meshesToFreeze        = new List<MeshRenderer>();
+    [Tooltip("Use for SkinnedMeshRenderer objects (e.g. characters). " +
+             "Checked when Meshes To Freeze is empty.")]
+    public List<SkinnedMeshRenderer> skinnedMeshesToFreeze = new List<SkinnedMeshRenderer>();
+
+    // Unified renderer list — populated in Start() from whichever list is filled.
+    // Both MeshRenderer and SkinnedMeshRenderer inherit Renderer, so .materials works on both.
+    List<Renderer> _freezeRenderers = new List<Renderer>();
+
+    [Header("Unlock")]
+    public bool   isUnlockable    = false;   // must be true for the triangle spell to fire
+    public string unlockBoolParam = "open";  // Animator Bool parameter that drives open/close
+    public string closedStateName = "Closed"; // Animator state name for the locked/closed pose
 
     [Header("Stun")]
-    public GameObject stunCanvas;   // unique UI per object; leave null if unused
+    public bool       isStunnable = true;   // set false on objects that should resist stun
+    public GameObject stunCanvas;           // unique UI per object; leave null if unused
 
     // ── Private ───────────────────────────────────────────────────────────────
 
@@ -60,44 +73,60 @@ public class SpellInteractable : MonoBehaviour
     Animator     _animator;
     SpellManager _sm;              // config source — set in Start()
 
-    // Original materials per renderer, cached in Start() before any freeze swap
-    readonly Dictionary<MeshRenderer, Material[]> _freezeOriginalMats =
-        new Dictionary<MeshRenderer, Material[]>();
+    // Original materials per renderer, cached in Start() before any freeze swap.
+    // Keyed on Renderer so both MeshRenderer and SkinnedMeshRenderer are supported.
+    readonly Dictionary<Renderer, Material[]> _freezeOriginalMats =
+        new Dictionary<Renderer, Material[]>();
 
     // ─────────────────────────────────────────────────────────────────────────
 
-    void Start()
+    public void Start()
     {
         _origPos  = transform.position;
         _origRot  = transform.rotation;
         _animator = GetComponent<Animator>();
         _sm       = SpellManager.Instance;
 
-        // ── Auto-fill freeze mesh list ────────────────────────────────────────
-        if (meshesToFreeze == null) meshesToFreeze = new List<MeshRenderer>();
+        // ── Build unified freeze-renderer list ────────────────────────────────
+        if (meshesToFreeze == null)        meshesToFreeze        = new List<MeshRenderer>();
+        if (skinnedMeshesToFreeze == null) skinnedMeshesToFreeze = new List<SkinnedMeshRenderer>();
 
-        if (meshesToFreeze.Count == 0)
+        if (meshesToFreeze.Count > 0)
         {
-            // Prefer all descendant renderers (handles multi-mesh models)
-            var found = GetComponentsInChildren<MeshRenderer>(includeInactive: true);
-            meshesToFreeze.AddRange(found);
+            foreach (var mr in meshesToFreeze)
+                if (mr != null) _freezeRenderers.Add(mr);
+        }
+        else if (skinnedMeshesToFreeze.Count > 0)
+        {
+            foreach (var smr in skinnedMeshesToFreeze)
+                if (smr != null) _freezeRenderers.Add(smr);
+        }
+        else
+        {
+            // Auto-fill: MeshRenderer first, SkinnedMeshRenderer fallback
+            foreach (var mr in GetComponentsInChildren<MeshRenderer>(includeInactive: true))
+                _freezeRenderers.Add(mr);
 
-            // Fallback: self only
-            if (meshesToFreeze.Count == 0)
+            if (_freezeRenderers.Count == 0)
+                foreach (var smr in GetComponentsInChildren<SkinnedMeshRenderer>(includeInactive: true))
+                    _freezeRenderers.Add(smr);
+
+            // Last resort: self
+            if (_freezeRenderers.Count == 0)
             {
                 var self = GetComponent<MeshRenderer>();
-                if (self != null) meshesToFreeze.Add(self);
+                if (self != null) _freezeRenderers.Add(self);
             }
         }
 
         // Cache original materials now, before any runtime swaps
-        foreach (var mr in meshesToFreeze)
-            if (mr != null) _freezeOriginalMats[mr] = mr.materials;
+        foreach (var r in _freezeRenderers)
+            if (r != null) _freezeOriginalMats[r] = r.materials;
     }
 
     // ── Public entry point ────────────────────────────────────────────────────
 
-    public void ApplySpell(string spell)
+    public virtual void ApplySpell(string spell)
     {
         switch (spell)
         {
@@ -108,6 +137,7 @@ public class SpellInteractable : MonoBehaviour
             case "square":     BeginSpell(SpellState.Pull,   PullRoutine());    break;
             case "swipe_down": BeginSpell(SpellState.Push,   PushRoutine());    break;
             case "squiggle":   BeginSpell(SpellState.Stun,   StunRoutine());    break;
+            case "fire_bolt":  break;  // handled by SpellManager.OnBoltImpact — no-op here
             // "spiral" (reveal) is handled in SpellManager, not here
             default: Debug.Log($"[SpellInteractable] No handler for '{spell}' on {name}"); break;
         }
@@ -170,12 +200,21 @@ public class SpellInteractable : MonoBehaviour
         if (_spellCoroutine    != null) { StopCoroutine(_spellCoroutine);    _spellCoroutine    = null; }
         if (_levitateCoroutine != null) { StopCoroutine(_levitateCoroutine); _levitateCoroutine = null; }
 
-        bool hadIgniteEffect  = _spawnedEffect != null;           // fire child exists
-        bool hadFreezeEffect  = currentSpell == SpellState.Freeze; // material-swap active
+        bool hadIgniteEffect     = _spawnedEffect != null;
+        bool hadFreezeEffect     = currentSpell == SpellState.Freeze;
+        bool hadUnlockEffect     = currentSpell == SpellState.Unlock;
         bool hadPositionalEffect = isLevitating
                                 || currentSpell == SpellState.Pull
                                 || currentSpell == SpellState.Push
                                 || currentSpell == SpellState.Stun;
+
+        // Position reset decision (computed before any cleanup so Unlock can read it):
+        //   Effect-only spell (ignite / freeze / unlock, no positional movement)
+        //     → clean up the visual; object stays active, no blink.
+        //   Anything else (positional involved)
+        //     → blink off → snap to origin → blink on.
+        bool effectOnlySpell = (hadIgniteEffect || hadFreezeEffect || hadUnlockEffect)
+                             && !hadPositionalEffect;
 
         // Clean up Ignite child
         if (hadIgniteEffect) DestroySpawnedEffect();
@@ -186,15 +225,17 @@ public class SpellInteractable : MonoBehaviour
         // Stun canvas off
         if (stunCanvas != null) stunCanvas.SetActive(false);
 
-        // Unlock → return to locked state
-        if (currentSpell == SpellState.Unlock && _animator != null)
-            _animator.Play("locking");
+        // Unlock → return to locked state.
+        // When a positional blink follows (effectOnlySpell == false), SetActive(false/true)
+        // will reset the Animator to its default state anyway — force Closed first so it
+        // re-awakens in the correct pose instead of a mid-animation frame.
+        if (hadUnlockEffect && _animator != null)
+        {
+            _animator.SetBool(unlockBoolParam, false);
+            if (!effectOnlySpell && !string.IsNullOrEmpty(closedStateName))
+                _animator.Play(closedStateName, 0, 0f);
+        }
 
-        // Position reset:
-        //   Pure ignite or pure freeze (no positional movement) → just clean up
-        //   the visual effect; object stays active, no blink.
-        //   Anything else → blink off → snap to origin → blink on.
-        bool effectOnlySpell = (hadIgniteEffect || hadFreezeEffect) && !hadPositionalEffect;
         if (!effectOnlySpell)
         {
             gameObject.SetActive(false);
@@ -230,7 +271,7 @@ public class SpellInteractable : MonoBehaviour
                 break;
 
             case SpellState.Unlock:
-                if (_animator != null) _animator.Play("locking");
+                if (_animator != null) _animator.SetBool(unlockBoolParam, false);
                 break;
 
             case SpellState.Pull:
@@ -262,7 +303,7 @@ public class SpellInteractable : MonoBehaviour
         if (_spawnedEffect != null) { Destroy(_spawnedEffect); _spawnedEffect = null; }
     }
 
-    /// Replace materials on all freeze meshes with the ice materials from SpellManager.
+    /// Replace materials on all freeze renderers with the ice materials from SpellManager.
     void ApplyFreezeMaterials()
     {
         if (_sm == null) return;
@@ -270,33 +311,30 @@ public class SpellInteractable : MonoBehaviour
         Material iceMat     = _sm.iceMaterial;
         Material iceOverlay = _sm.iceOverlayMaterial;
 
-        foreach (var mr in meshesToFreeze)
+        foreach (var r in _freezeRenderers)
         {
-            if (mr == null || !_freezeOriginalMats.ContainsKey(mr)) continue;
+            if (r == null || !_freezeOriginalMats.ContainsKey(r)) continue;
 
-            int slotCount = _freezeOriginalMats[mr].Length;
+            int slotCount = _freezeOriginalMats[r].Length;
             var newMats   = new List<Material>(slotCount + 1);
 
-            // Replace every existing slot with iceMaterial.
-            // If iceMaterial is null, keep the original slot (no visual change for that mesh).
             for (int i = 0; i < slotCount; i++)
-                newMats.Add(iceMat != null ? iceMat : _freezeOriginalMats[mr][i]);
+                newMats.Add(iceMat != null ? iceMat : _freezeOriginalMats[r][i]);
 
-            // Append overlay as an extra slot (e.g. frost rim / outline).
             if (iceOverlay != null)
                 newMats.Add(iceOverlay);
 
-            mr.materials = newMats.ToArray();
+            r.materials = newMats.ToArray();
         }
     }
 
-    /// Restore all freeze meshes to their original materials.
+    /// Restore all freeze renderers to their original materials.
     void RemoveFreezeMaterials()
     {
-        foreach (var mr in meshesToFreeze)
+        foreach (var r in _freezeRenderers)
         {
-            if (mr == null || !_freezeOriginalMats.ContainsKey(mr)) continue;
-            mr.materials = _freezeOriginalMats[mr];
+            if (r == null || !_freezeOriginalMats.ContainsKey(r)) continue;
+            r.materials = _freezeOriginalMats[r];
         }
 
         // If the object is still inside the targeting cone, ObjectHighlighter may
@@ -375,9 +413,9 @@ public class SpellInteractable : MonoBehaviour
     // UNLOCK ──────────────────────────────────────────────────────────────────
     IEnumerator UnlockRoutine()
     {
-        if (_animator != null) _animator.Play("unlocking");
+        if (_animator != null) _animator.SetBool(unlockBoolParam, true);
         yield return SuspendUntilReset();
-        // PerformReset() plays "locking" at the end
+        // SuspendUntilReset() never returns — PerformReset() is called by SessionResetRoutine
     }
 
     // PULL ────────────────────────────────────────────────────────────────────

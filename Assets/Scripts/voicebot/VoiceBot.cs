@@ -138,6 +138,18 @@ namespace InionVR.AI
         }
 
         /// <summary>
+        /// Cancel any in-flight Whisper request and reset state so Record() can
+        /// be called immediately again.  Safe to call even when idle.
+        /// </summary>
+        public void ForceReset()
+        {
+            isClipRecording  = false;
+            isThreadRunning  = false;
+            cancellationTokenSource.Cancel();
+            cancellationTokenSource = new CancellationTokenSource();
+            Microphone.End(null);
+        }
+        /// <summary>
         /// Call this in OnDestroy method to destroy the script as soon as unity runtime dies
         /// </summary>
         public void Destroy()
@@ -194,10 +206,10 @@ namespace InionVR.AI
                 var req = new CreateAudioTranscriptionsRequest
                 {
                     FileData = new FileData() { Data = data, Name = "audio.wav" },
-                    Model = "gpt-4o-mini-transcribe", //"whisper-1"
+                    Model = "whisper-1",
                     Language = "en",
                     Prompt =
-                        "The audio is spoken in English and contains voice commands about human anatomy, organs, and body systems. The speaker may use command words such as add, remove, delete, hide, or show, followed by an organ or system name. Transcribe all command words and anatomical terms accurately. Use full English anatomical terms, not single letters (for example, use eye instead of I). Common anatomy terms include heart, lungs, liver, stomach, intestines, reproductive system, skeletal system, muscular system, respiratory system, nervous system, eye, muscles."
+                        "The audio contains a single spoken spell name. Valid spell names are: ignite, freeze, levitate, unlock, pull, push, stun, reveal. Transcribe only the spoken word exactly as heard."
 
                 };
                 //old method sending the data forward to gpt, removing this
@@ -217,10 +229,31 @@ namespace InionVR.AI
                 if (token.IsCancellationRequested)
                     return;
 
-                // THIS IS NOW THE FINAL OUTPUT
-                onThinking.Invoke(res);
+                // Filter 1: reject empty / too-short transcriptions (silence or noise)
+                if (string.IsNullOrWhiteSpace(res) || res.Trim().Length < 3)
+                {
+                    Debug.Log("[VoiceBot] Transcription too short, ignoring.");
+                    onThinking?.Invoke("Unknown");
+                    isThreadRunning = false;
+                    return;
+                }
 
-                // HARD STOP — do NOT continue pipeline
+                // Filter 2: reject if no known spell word is present.
+                // Whisper hallucinates long passages on silence — this kills them.
+                string resLower = res.ToLower();
+                string[] spellWords = { "ignite", "freeze", "levitate", "unlock", "pull", "push", "stun", "reveal" };
+                bool containsSpell = System.Array.Exists(spellWords, w => resLower.Contains(w));
+                if (!containsSpell)
+                {
+                    Debug.Log("[VoiceBot] No spell word in transcription, ignoring: " + res);
+                    onThinking?.Invoke("Unknown");
+                    isThreadRunning = false;
+                    return;
+                }
+
+                // Forward Whisper result directly — WandHandler.MapVoiceLabel handles the mapping
+                Debug.Log("[VoiceBot] Transcription: " + res);
+                onThinking?.Invoke(res);
                 isThreadRunning = false;
                 return;
 
@@ -656,3 +689,10 @@ namespace InionVR.AI
         #endregion#
     }
 }
+
+
+
+
+
+
+

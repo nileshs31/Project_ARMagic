@@ -3,7 +3,23 @@
     "allow": [
       "Bash(git -C \"D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\" worktree list)",
       "Bash(git -C \"D:/Nilesh/GameDev/Project_ARMagic\" branch -a)",
-      "WebFetch(domain:devpost.com)"
+      "WebFetch(domain:devpost.com)",
+      "Bash(xargs grep *)",
+      "Bash(grep -E \"\\\\.\\(prefab|cs\\)$\")",
+      "Bash(grep -v \"\\\\.meta$\")",
+      "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\MetaControllers\\\\PassthroughContoller.cs'\")",
+      "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\MetaControllers\\\\PassthroughContoller.cs' | Select-String 'public void TogglePassthrough' -Context 0,5\")",
+      "Bash(powershell.exe -Command ' *)",
+      "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\MetaControllers\\\\PassthroughContoller.cs' | Select-String 'IsPassthrough|SetPassthrough|TogglePassthrough'\")",
+      "Bash(powershell.exe -Command \"New-Item -ItemType Directory -Path 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\UI' -Force | Out-Null; Write-Host 'Created'\")",
+      "Bash(powershell.exe -Command \"New-Item -ItemType Directory -Path 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\SpiderControllers' -Force | Out-Null; Write-Host 'Created'\")",
+      "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\WandControllers\\\\ObjectHighlighter.cs'\")",
+      "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\SpellFadeTester.cs'\")",
+      "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\voicebot\\\\VoiceBot.cs' | Select-Object -First 60\")",
+      "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\voicebot\\\\VoiceBot.cs' | Select-Object -Skip 60 -First 100\")",
+      "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\voicebot\\\\VoiceBot.cs' | Select-Object -Skip 160 -First 120\")",
+      "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\voicebot\\\\VoiceBot.cs' | Select-Object -Skip 280 -First 120\")",
+      "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\voicebot\\\\VoiceBot.cs' | Select-Object -Skip 400 -First 100\")"
     ]
   }
 }

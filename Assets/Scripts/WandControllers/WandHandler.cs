@@ -28,11 +28,100 @@ public class WandHandler : MonoBehaviour
 
     public WandTargeting targeting;
 
+    [Header("Voice Control")]
+    public bool             isVoiceControlled = false;
+    public VoiceBot_Wrapper voiceWrapper;
+    public GameObject       listeningIndicator;  // shown while mic is open
+    public GameObject       loadingIndicator;    // shown while Whisper is processing
+
     bool _backButtonLastFrame = false;  // edge detection for stylus back button (bolt)
+
     void Start()
     {
         SwitchToController();
-        //trailRenderer = controllerTrailRenderer;
+
+        if (voiceWrapper != null)
+            voiceWrapper.onSpellTranscribed += OnVoiceSpell;
+    }
+
+    void OnDestroy()
+    {
+        if (voiceWrapper != null)
+            voiceWrapper.onSpellTranscribed -= OnVoiceSpell;
+    }
+
+    /// Receives the assistant's result from VoiceBot_Wrapper after transcription.
+    /// Hides the loading indicator, then routes valid labels through SpellEvents.
+    void OnVoiceSpell(string spellLabel)
+    {
+        if (loadingIndicator != null) loadingIndicator.SetActive(false);
+
+        if (string.IsNullOrEmpty(spellLabel))
+        {
+            Debug.Log("[WandHandler] Voice: empty result.");
+            return;
+        }
+
+        // Whisper hallucinates long text when it hears silence or ambient noise.
+        // Any real spell label is at most 10 characters — reject anything longer.
+        if (spellLabel.Length > 20)
+        {
+            Debug.Log("[WandHandler] Voice: result too long (ambient noise?), ignoring.");
+            return;
+        }
+
+        // Normalise: strip trailing punctuation, lowercase.
+        // Handles "Ignite." → "ignite", "Circle_CW" → "circle_cw", etc.
+        string normalized = spellLabel.Trim().TrimEnd('.', '!', '?', ',', ';').ToLowerInvariant();
+
+        string mapped = MapVoiceLabel(normalized);
+
+        if (mapped == null)
+        {
+            Debug.Log($"[WandHandler] Voice: '{spellLabel}' not recognised as a spell.");
+            return;
+        }
+
+        var target = targeting.GetLockedTarget() ?? targeting.currentTarget;
+        targeting.UnlockTarget();
+        TriggerSuccessHaptics();
+        SpellEvents.OnSpellCast?.Invoke(mapped, target);
+    }
+
+    /// Maps both exact gesture labels and natural spoken names to the canonical
+    /// spell label used everywhere else in the system.
+    /// Returns null if the input isn't a known spell.
+    static string MapVoiceLabel(string input)
+    {
+        switch (input)
+        {
+            // ── Exact labels (assistant configured to return these) ───────────
+            case "circle_cw":  return "circle_cw";
+            case "circle_ccw": return "circle_ccw";
+            case "swipe_up":   return "swipe_up";
+            case "triangle":   return "triangle";
+            case "square":     return "square";
+            case "swipe_down": return "swipe_down";
+            case "squiggle":   return "squiggle";
+            case "spiral":     return "spiral";
+
+            // ── Friendly spoken names (fallback if assistant returns English) ─
+            case "ignite":     return "circle_cw";
+            case "fire":       return "circle_cw";
+            case "freeze":     return "circle_ccw";
+            case "ice":        return "circle_ccw";
+            case "levitate":   return "swipe_up";
+            case "lift":       return "swipe_up";
+            case "unlock":     return "triangle";
+            case "open":       return "triangle";
+            case "pull":       return "square";
+            case "push":       return "swipe_down";
+            case "stun":       return "squiggle";
+            case "reveal":     return "spiral";
+            case "show":       return "spiral";
+
+            default:           return null;
+        }
     }
     public Vector3 GetTipPosition()
     {
@@ -74,7 +163,16 @@ public class WandHandler : MonoBehaviour
                 SwitchToController();
             }
         }
-
+        if (isVoiceControlled)
+        {
+            voiceWrapper.gameObject.SetActive(true);
+        }
+        else
+        {
+            voiceWrapper.gameObject.SetActive(false);
+            loadingIndicator.gameObject.SetActive(false);
+            listeningIndicator.gameObject.SetActive(false);
+        }
         //float analogInput = _stylusHandler.CurrentState.cluster_middle_value;
 
         float analogInput = GetCurrentInput();
@@ -84,16 +182,30 @@ public class WandHandler : MonoBehaviour
             if (!isSwirling)
             {
                 isSwirling = true;
-                //targeting.LockTarget();
                 trailRenderer.enabled = true;
 
-                strokePoints.Clear();
-                Vector3 tip = GetTipPosition();
-                strokePoints.Add(tip);
-                lastSamplePos = tip;
+                if (isVoiceControlled && voiceWrapper != null)
+                {
+                    // Cancel any in-flight Whisper request so we can start fresh.
+                    // Safe to call when idle — it's a no-op in that case.
+                    voiceWrapper.CancelRecording();
+
+                    // Voice mode — open mic, trail is visual feedback only
+                    if (listeningIndicator != null) listeningIndicator.SetActive(true);
+                    if (loadingIndicator   != null) loadingIndicator.SetActive(false);
+                    voiceWrapper.StartVoiceRecording();
+                }
+                else
+                {
+                    // Gesture mode — begin stroke recording
+                    strokePoints.Clear();
+                    Vector3 tip = GetTipPosition();
+                    strokePoints.Add(tip);
+                    lastSamplePos = tip;
+                }
             }
 
-            RecordStrokePoint();
+            if (!isVoiceControlled) RecordStrokePoint();
             TriggerHaptics(analogInput);
         }
         else if (analogInput < 0.15f)
@@ -104,7 +216,15 @@ public class WandHandler : MonoBehaviour
                 trailRenderer.enabled = false;
                 OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.RTouch);
                 hapticTimer = 0f;
-                RecognizeStroke();
+
+                if (isVoiceControlled && voiceWrapper != null)
+                {
+                    if (listeningIndicator != null) listeningIndicator.SetActive(false);
+                    if (loadingIndicator   != null) loadingIndicator.SetActive(true);
+                    voiceWrapper.StopVoiceRecording();   // Whisper picks it up → onSpellTranscribed
+                }
+                else
+                    RecognizeStroke();
             }
         }
 

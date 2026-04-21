@@ -131,16 +131,20 @@ public class SpellManager : MonoBehaviour
             return;
         }
 
-        // ── Unlock additionally requires an Animator with an "unlocking" state ─
+        // ── Unlock: object must have isUnlockable = true ──────────────────────
 
-        if (spell == "triangle")
+        if (spell == "triangle" && !interactable.isUnlockable)
         {
-            var anim = target.GetComponent<Animator>();
-            if (anim == null || !anim.HasState(0, Animator.StringToHash("unlocking")))
-            {
-                ShowUnknown();
-                return;
-            }
+            ShowUnknown();
+            return;
+        }
+
+        // ── Stun: object must have isStunnable = true ─────────────────────────
+
+        if (spell == "squiggle" && !interactable.isStunnable)
+        {
+            ShowUnknown();
+            return;
         }
 
         interactable.ApplySpell(spell);
@@ -212,7 +216,7 @@ public class SpellManager : MonoBehaviour
                 {
                     // Reached the target — snap to it, impact, vanish
                     boltGO.transform.position = targetPos;
-                    OnBoltImpact(targetPos);
+                    OnBoltImpact(targetPos, target);
                     Destroy(boltGO);
                     yield break;
                 }
@@ -248,7 +252,7 @@ public class SpellManager : MonoBehaviour
                     && hit.collider is BoxCollider)
                 {
                     boltGO.transform.position = hit.point;
-                    OnBoltImpact(hit.point);
+                    OnBoltImpact(hit.point, hit.collider.gameObject);
                     Destroy(boltGO);
                     yield break;
                 }
@@ -263,14 +267,18 @@ public class SpellManager : MonoBehaviour
         }
     }
 
-    /// Plays the impact sound and spawns the explosion VFX at the given world position.
-    void OnBoltImpact(Vector3 position)
+    /// Plays the impact sound, spawns explosion VFX, and notifies any
+    /// SpellInteractable on the hit object (e.g. spider death on fire-bolt hit).
+    void OnBoltImpact(Vector3 position, GameObject hitObject = null)
     {
         if (boltAudioSource != null && boltImpactClip != null)
             boltAudioSource.PlayOneShot(boltImpactClip);
 
         if (boltImpactPrefab != null)
             Instantiate(boltImpactPrefab, position, Quaternion.identity);
+
+        // Let the hit object react to the bolt (e.g. SpiderController.OnDeath)
+        hitObject?.GetComponent<SpellInteractable>()?.ApplySpell("fire_bolt");
     }
 
     // ── Reveal ────────────────────────────────────────────────────────────────
