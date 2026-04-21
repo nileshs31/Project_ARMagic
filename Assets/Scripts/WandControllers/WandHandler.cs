@@ -35,6 +35,7 @@ public class WandHandler : MonoBehaviour
     public GameObject       loadingIndicator;    // shown while Whisper is processing
 
     bool _backButtonLastFrame = false;  // edge detection for stylus back button (bolt)
+    bool _inputEnabled        = false;  // true after GameStartUI calls EnableInput()
 
     void Start()
     {
@@ -143,9 +144,14 @@ public class WandHandler : MonoBehaviour
         }
     }
 
+    /// Called by GameStartUI when the player presses Begin.
+    public void EnableInput() => _inputEnabled = true;
+
     // Update is called once per frame
     void Update()
     {
+        if (!_inputEnabled) return;
+
         // Detect device
         if (IsStylusActive())
         {

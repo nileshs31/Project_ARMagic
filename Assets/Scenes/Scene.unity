@@ -19238,8 +19238,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   beginButton: {fileID: 1841878059}
   settingsPanel: {fileID: 771045862}
+  wandHandler: {fileID: 817571070}
   introClip: {fileID: 8300000, guid: 5f9f298c8fea23d43bc7a0fecc296c6d, type: 3}
-  spellWorks: {fileID: 1401120834}
 --- !u!82 &1073173574
 AudioSource:
   m_ObjectHideFlags: 0
@@ -25531,7 +25531,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1401120835
 Transform:
   m_ObjectHideFlags: 0
