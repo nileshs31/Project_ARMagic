@@ -225,16 +225,9 @@ public class SpellInteractable : MonoBehaviour
         // Stun canvas off
         if (stunCanvas != null) stunCanvas.SetActive(false);
 
-        // Unlock → return to locked state.
-        // When a positional blink follows (effectOnlySpell == false), SetActive(false/true)
-        // will reset the Animator to its default state anyway — force Closed first so it
-        // re-awakens in the correct pose instead of a mid-animation frame.
+        // Unlock: clear the bool first so any transition evaluates correctly.
         if (hadUnlockEffect && _animator != null)
-        {
             _animator.SetBool(unlockBoolParam, false);
-            if (!effectOnlySpell && !string.IsNullOrEmpty(closedStateName))
-                _animator.Play(closedStateName, 0, 0f);
-        }
 
         if (!effectOnlySpell)
         {
@@ -243,6 +236,13 @@ public class SpellInteractable : MonoBehaviour
             transform.rotation = _origRot;
             gameObject.SetActive(true);
         }
+
+        // Force the Animator to the closed state AFTER any SetActive blink.
+        // SetActive(false/true) resets the Animator to its default state, which
+        // wipes any Play() call made before it.  Calling Play() here — after the
+        // blink — guarantees the correct state regardless of what the default is.
+        if (hadUnlockEffect && _animator != null && !string.IsNullOrEmpty(closedStateName))
+            _animator.Play(closedStateName, 0, 0f);
 
         currentSpell = SpellState.None;
         isLevitating = false;

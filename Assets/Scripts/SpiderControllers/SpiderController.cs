@@ -411,20 +411,38 @@ public class SpiderController : SpellInteractable
 
     IEnumerator DeathEffect()
     {
-        SetWalk(false);
         HideMeshes();
         DisableColliders();
+        SetWalk(false);
+
+        // Disable the Animator while the spider is dead so root-motion (and any
+        // walk→idle transition motion) cannot drift transform.rotation during the
+        // respawn wait.  It is re-enabled AFTER position/rotation are restored so
+        // it can never overwrite the corrected transform in LateUpdate.
+        if (spiderAnimator != null) spiderAnimator.enabled = false;
 
         yield return new WaitForSeconds(respawnDelay);
 
-        // Respawn
+        // Restore exact spawn transform.
+        // No SnapToSurface here — that call computes a delta from transform.up and
+        // can compound any residual rotation error.  We are already at the precise
+        // spawn position/rotation, so it is unnecessary and potentially harmful.
         transform.position = _spawnPos;
-        //transform.rotation = _spawnRot;
+        transform.rotation = _spawnRot;
         _patrolIndex       = 0;
-        SnapToSurface();
+
+        // Re-enable Animator BEFORE showing meshes so the first visible frame
+        // already has the correct animation state.
+        if (spiderAnimator != null) spiderAnimator.enabled = true;
         ShowMeshes();
         EnableColliders();
-        ResumePatrol();
+
+        // Inline patrol restart — bypasses ResumePatrol's SnapToSurface call
+        // which is not needed here (transform is already at spawn).
+        StopPatrol();
+        _phase           = SpiderPhase.Patrolling;
+        SetWalk(true);
+        _patrolCoroutine = StartCoroutine(PatrolLoop());
     }
 
     // ── FREEZE ───────────────────────────────────────────────────────────────

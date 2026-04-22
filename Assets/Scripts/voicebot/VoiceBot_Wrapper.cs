@@ -60,7 +60,7 @@ public class VoiceBot_Wrapper : MonoBehaviour
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
 
-    public void OnDestroy() => bot.Destroy();
+    public void OnDestroy() { if (bot != null) bot.Destroy(); }
 
     [ContextMenu("StopRecording")]
     public void StopRecording() => bot.StopRecording();

@@ -8,17 +8,16 @@ public class BillBoard : MonoBehaviour
 
     private void Start()
     {
-        rig = Camera.main.transform;
+        if (Camera.main != null)
+            rig = Camera.main.transform;
+        else
+            Debug.LogWarning("[BillBoard] Camera.main is null — ensure the main camera has the 'MainCamera' tag.");
     }
-    /* private void LateUpdate()
-     {
-         transform.LookAt(rig.position + rig.forward /*+ new Vector3(0, 0, -0.25f));
-     }*/
 
     private void Update()
     {
+        if (rig == null) return;
         Vector3 direction = (transform.position - rig.position).normalized;
         transform.rotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-
     }
 }

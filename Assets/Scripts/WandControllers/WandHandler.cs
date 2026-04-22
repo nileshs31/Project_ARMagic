@@ -171,13 +171,13 @@ public class WandHandler : MonoBehaviour
         }
         if (isVoiceControlled)
         {
-            voiceWrapper.gameObject.SetActive(true);
+            if (voiceWrapper != null) voiceWrapper.gameObject.SetActive(true);
         }
         else
         {
-            voiceWrapper.gameObject.SetActive(false);
-            loadingIndicator.gameObject.SetActive(false);
-            listeningIndicator.gameObject.SetActive(false);
+            if (voiceWrapper       != null) voiceWrapper.gameObject.SetActive(false);
+            if (loadingIndicator   != null) loadingIndicator.SetActive(false);
+            if (listeningIndicator != null) listeningIndicator.SetActive(false);
         }
         //float analogInput = _stylusHandler.CurrentState.cluster_middle_value;
 

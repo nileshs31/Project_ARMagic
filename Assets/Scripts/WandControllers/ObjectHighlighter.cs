@@ -182,8 +182,4 @@ public class ObjectHighlighter : MonoBehaviour
             if (r != null) AddHighlight(r);
     }
 
-    void Update()
-    {
-        if (!isHighlighted) return;
-    }
 }

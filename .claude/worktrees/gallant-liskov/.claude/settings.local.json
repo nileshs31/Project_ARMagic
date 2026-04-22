@@ -19,7 +19,8 @@
       "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\voicebot\\\\VoiceBot.cs' | Select-Object -Skip 60 -First 100\")",
       "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\voicebot\\\\VoiceBot.cs' | Select-Object -Skip 160 -First 120\")",
       "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\voicebot\\\\VoiceBot.cs' | Select-Object -Skip 280 -First 120\")",
-      "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\voicebot\\\\VoiceBot.cs' | Select-Object -Skip 400 -First 100\")"
+      "Bash(powershell.exe -Command \"Get-Content 'D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\voicebot\\\\VoiceBot.cs' | Select-Object -Skip 400 -First 100\")",
+      "Bash(dir /s /b \"D:\\\\Nilesh\\\\GameDev\\\\Project_ARMagic\\\\Assets\\\\Scripts\\\\*.cs\")"
     ]
   }
 }
