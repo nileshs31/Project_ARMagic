@@ -21,7 +21,13 @@
             Name "ForwardUnlit"
             Tags { "LightMode"="UniversalForward" }
 
-            Blend SrcAlpha One
+            // Split blend equation so RGB stays additive but alpha channel is
+            // left untouched.  In AR/passthrough the framebuffer alpha encodes
+            // "how much passthrough to show" (0 = full passthrough).  The old
+            // single-argument form wrote frag.a² + dst.a into alpha, pushing it
+            // above 0 and making the passthrough compositor show black instead of
+            // the real world.  Zero One on the alpha channel preserves dst.a = 0.
+            Blend SrcAlpha One, Zero One
             ZWrite Off
             Cull Back
 
